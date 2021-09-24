@@ -16,8 +16,8 @@ export function AppRouting() {
       <Route path = "/"             component = { HomePage } exact />
       <Route path = "/about"        component = { AboutPage } />
       <Route path = "/contact"      component = { ContactPage } />
-      <Route path = "/products"     component = { ProductsPage } />
       <Route path = "/products/:id" component = { ProductReviewPage } />
+      <Route path = "/products"     component = { ProductsPage } />
       <Route path = "/cart"         component = { CartPage } />
       <Route path = "*"             component = { PageNotFound } />
     </Switch>
