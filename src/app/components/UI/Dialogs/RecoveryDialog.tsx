@@ -9,6 +9,7 @@ import {
   InputAdornment
 } from '@mui/material';
 import { Email } from '@mui/icons-material';
+import { useEffect, useRef } from 'react';
 
 interface RecoveryDialogProps {
   isOpen: boolean;
@@ -17,6 +18,14 @@ interface RecoveryDialogProps {
 }
 
 export function RecoveryDialog( props: RecoveryDialogProps ) {
+  const userNameRef = useRef<HTMLInputElement>( null );
+
+  useEffect(() => {
+    if ( props.isOpen ) {
+      setTimeout( () => userNameRef?.current?.focus(), 500 );
+    }
+  }, [ props.isOpen ]);
+
   return (
     <Dialog
       open = { props.isOpen }
@@ -32,8 +41,9 @@ export function RecoveryDialog( props: RecoveryDialogProps ) {
               </InputAdornment>
             )
           }}
-          variant = "filled"
-          label   = "Username"
+          variant  = "filled"
+          label    = "Username"
+          inputRef = { userNameRef }
           fullWidth
         />
         <DialogContentText>We will send to your email a link to reset the password! check your mailbox for next steps.</DialogContentText>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Button,
@@ -21,6 +21,7 @@ import {
   Visibility,
   VisibilityOff
 } from '@mui/icons-material';
+
 import { RecoveryDialog } from '../../../components';
 
 type LoginData = {
@@ -39,6 +40,15 @@ interface LoginDialogProps {
 export function LoginDialog( props: LoginDialogProps ) {
   const [ showPassword, setShowPassword ]   = useState( false );
   const [ isFPDialogOpen, setFPDialogOpen ] = useState( false );
+
+  const userNameRef = useRef<HTMLInputElement>( null );
+
+  useEffect(() => {
+    if ( props.isOpen ) {
+      setTimeout( () => userNameRef?.current?.focus(), 500 );
+    }
+  }, [ props.isOpen ]);
+
 
   const handleDemoLogin = () => {
     // set auto username & pass
@@ -63,8 +73,9 @@ export function LoginDialog( props: LoginDialogProps ) {
               </InputAdornment>
             )
           }}
-          variant = "filled"
-          label   = "Username"
+          variant  = "filled"
+          label    = "Username"
+          inputRef = { userNameRef }
           fullWidth
         />
         <TextField
