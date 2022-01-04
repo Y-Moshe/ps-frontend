@@ -1,3 +1,7 @@
+import { useEffect, useRef } from 'react';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 import {
   Button,
   TextField,
@@ -9,7 +13,14 @@ import {
   InputAdornment
 } from '@mui/material';
 import { Email } from '@mui/icons-material';
-import { useEffect, useRef } from 'react';
+
+const validationSchema = yup.object({
+  username: yup.string().required().email()
+});
+
+interface ValidationSchema {
+  username: string;
+}
 
 interface RecoveryDialogProps {
   isOpen: boolean;
@@ -18,6 +29,19 @@ interface RecoveryDialogProps {
 }
 
 export function RecoveryDialog( props: RecoveryDialogProps ) {
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+      isValid,
+      touchedFields
+    }
+  } = useForm<ValidationSchema>({
+    resolver: yupResolver( validationSchema ),
+    mode: 'all'
+  });
+
   const userNameRef = useRef<HTMLInputElement>( null );
 
   useEffect(() => {
@@ -32,35 +56,41 @@ export function RecoveryDialog( props: RecoveryDialogProps ) {
       onBackdropClick = { props.onClose }>
       <DialogTitle>Password Recovery</DialogTitle>
 
-      <DialogContent>
-        <TextField
-          InputProps = {{
-            startAdornment: (
-              <InputAdornment position = "start">
-                <Email />
-              </InputAdornment>
-            )
-          }}
-          variant  = "filled"
-          label    = "Username"
-          inputRef = { userNameRef }
-          fullWidth
-        />
-        <DialogContentText>We will send to your email a link to reset the password! check your mailbox for next steps.</DialogContentText>
-      </DialogContent>
+      <form onSubmit = { handleSubmit( data => props.onRecoveryRequest( data.username )) }>
+        <DialogContent>
+          <TextField
+            InputProps = {{
+              startAdornment: (
+                <InputAdornment position = "start">
+                  <Email />
+                </InputAdornment>
+              )
+            }}
+            variant  = "filled"
+            label    = "Username"
+            inputRef = { userNameRef }
+            { ...register( 'username' ) }
+            error      = { touchedFields.username && Boolean( errors.username ) }
+            helperText = { touchedFields.username && errors.username?.message }
+            fullWidth
+          />
+          <DialogContentText>We will send to your email a link to reset the password! check your mailbox for next steps.</DialogContentText>
+        </DialogContent>
 
-      <DialogActions>
-        <Button
-          color   = "error"
-          onClick = { props.onClose }>
-            Close
-        </Button>
-        <Button
-          color   = "success"
-          onClick = { () => props.onRecoveryRequest( 'test@test.com' ) }>
-            Recover
-        </Button>
-      </DialogActions>
+        <DialogActions>
+          <Button
+            color   = "error"
+            onClick = { props.onClose }>
+              Close
+          </Button>
+          <Button
+            disabled = { !isValid }
+            type  = "submit"
+            color = "success">
+              Recover
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   )
 }
