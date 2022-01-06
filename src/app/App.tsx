@@ -1,9 +1,16 @@
 import { useEffect } from 'react';
+import { Box, SxProps, Theme } from '@mui/material';
 
 import { Footer, Header } from './components';
 import { AppRouting } from './App-Routing';
 
 import { version } from '../../package.json';
+
+const appStyle: SxProps<Theme> = {
+  display: 'flex',
+  minHeight: '100vh',
+  flexDirection: 'column'
+};
 
 export default function App() {
   useEffect(() => {
@@ -11,12 +18,12 @@ export default function App() {
   }, []);
 
   return (
-    <div>
+    <Box sx = { appStyle }>
       <Header />
 
       <AppRouting />
 
       <Footer />
-    </div>
+    </Box>
   );
 }
