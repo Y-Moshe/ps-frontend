@@ -5,27 +5,26 @@ import * as yup from "yup";
 import {
   Box,
   Button,
+  IconButton,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   InputAdornment,
   FormGroup,
   FormControlLabel,
   Checkbox,
-  Link
+  Link,
+  SxProps,
+  Theme
 } from '@mui/material';
 import {
-  Lock,
   Email,
   Password,
   Visibility,
-  VisibilityOff
+  VisibilityOff,
+  AccountBox,
+  LockOpen
 } from '@mui/icons-material';
 
-import { RecoveryDialog } from '../../../components';
+import { RecoveryDialog } from '../../components';
 
 const validationSchema = yup.object({
   username: yup.string().required().email(),
@@ -39,26 +38,56 @@ interface ValidationSchema {
   rememberMe: boolean;
 }
 
-interface LoginDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onLogin: ( loginData: ValidationSchema ) => void;
-  onRecoveryRequest: ( email: string ) => void;
-}
+const loginPageStyle: SxProps<Theme> = {
+  flexGrow: 1,
+  display: 'flex',
+  width: 1,
+  background: 'linear-gradient(to right,rgba(247,84,9,.788),rgba(204,82,241,.678))'
+};
 
-export function LoginDialog( props: LoginDialogProps ) {
-  const [ showPassword, setShowPassword ]   = useState( false );
-  const [ isFPDialogOpen, setFPDialogOpen ] = useState( false );
+const loginBoxStyle: SxProps<Theme> = {
+  margin: 'auto',
+  padding: 2,
+  borderRadius: 3,
+  width: 0.4,
+  background: 'rgba(0, 0, 0, 0.1)',
+  minWidth: 300,
+  maxWidth: 600
+};
+
+const loginLogoContainerStyle: SxProps<Theme> = {
+  width: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  alignContent: 'center',
+  marginBottom: 2,
+  '& img': {
+    borderRadius: '50%',
+    boxShadow: '0 0 10px white'
+  }
+};
+
+const rememberMeContainerStyle: SxProps<Theme> = {
+  width: 1,
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginTop: 1,
+  marginBottom: 1
+};
+
+export function LoginPage() {
+  const [ isRecoveryDialogOpen, setIsRecoveryDialogOpen ] = useState( false );
+  const [ showPassword, setShowPassword ] = useState( false );
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: {
       errors,
       isValid,
       touchedFields
-    },
-    setValue
+    }
   } = useForm<ValidationSchema>({
     resolver: yupResolver( validationSchema ),
     mode: 'all'
@@ -67,28 +96,35 @@ export function LoginDialog( props: LoginDialogProps ) {
   const userNameRef = useRef<HTMLInputElement>( null );
 
   useEffect(() => {
-    if ( props.isOpen ) {
-      setTimeout( () => userNameRef?.current?.focus(), 500 );
-    }
-  }, [ props.isOpen ]);
+    setTimeout( () => userNameRef?.current?.focus(), 500 );
+  }, []);
+
+  const handleLogin = ( loginData: ValidationSchema ) => {
+    console.log( loginData );
+  };
   
   const handleDemoLogin = () => {
     setValue( 'username', 'example@demo.com' );
     setValue( 'password', 'as12Df@' );
-    handleSubmit( props.onLogin )();
+    handleSubmit( handleLogin )();
+  };
+
+  const handleRecoveryRequest = ( email: string ) => {
+    console.log( email );
   };
 
   return (
-    <Dialog
-      open = { props.isOpen }
-      onBackdropClick = { props.onClose }>
-      <DialogTitle><Lock /> Log-In</DialogTitle>
+    <Box sx = { loginPageStyle }>
+      <Box sx = { loginBoxStyle }>
+        <Box sx = { loginLogoContainerStyle }>
+          <img
+            src = "https://angular-dummy-project.herokuapp.com/assets/images/login-logo.png"
+            alt = "Log-In logo" />
+        </Box>
 
-      <form onSubmit = { handleSubmit( props.onLogin ) }>
-        <DialogContent dividers>
-          <DialogContentText>
-            Please fill the following information in order to log-in.
-          </DialogContentText>
+        <Box
+          component = "form"
+          onSubmit  = { handleSubmit( handleLogin ) }>
           <TextField
             InputProps = {{
               startAdornment: (
@@ -115,9 +151,10 @@ export function LoginDialog( props: LoginDialogProps ) {
               endAdornment: (
                 <InputAdornment
                   sx = {{ cursor: 'pointer' }}
-                  position = "end"
-                  onClick = { () => setShowPassword( prev => !prev )}>
-                  { showPassword ? <VisibilityOff /> : <Visibility /> }
+                  position = "end">
+                    <IconButton onClick = { () => setShowPassword( prev => !prev )}>
+                      { showPassword ? <VisibilityOff /> : <Visibility /> }
+                    </IconButton>
                 </InputAdornment>
               )
             }}
@@ -130,7 +167,7 @@ export function LoginDialog( props: LoginDialogProps ) {
             fullWidth
           />
 
-          <Box sx = {{ width: 1, display: 'flex', justifyContent: 'space-between', margin: 1 }}>
+          <Box sx = { rememberMeContainerStyle }>
             <FormGroup>
               <FormControlLabel
                 { ...register( 'rememberMe' ) }
@@ -140,34 +177,38 @@ export function LoginDialog( props: LoginDialogProps ) {
 
             <Link
               component = "button"
-              onClick = { () => setFPDialogOpen( true ) }>
+              onClick   = { () => setIsRecoveryDialogOpen( true ) }>
               Forgot Password?
             </Link>
           </Box>
 
-          <Button onClick = { handleDemoLogin } color = "warning">Log-In as Demo User</Button>
-        </DialogContent>
+          <Button
+            variant = "contained"
+            startIcon = { <AccountBox /> }
+            onClick = { handleDemoLogin }
+            color   = "warning">
+              Log-In as Demo User
+          </Button>
 
-        <DialogActions>
-          <Button
-            color   = "inherit"
-            onClick = { props.onClose }>
-              Close
-          </Button>
-          <Button
-            disabled = { !isValid }
-            color = "success"
-            type  = "submit">
-              Log-In
-          </Button>
-        </DialogActions>
-      </form>
+          <Box sx = {{ marginTop: 2 }}>
+            <Button
+              type     = "submit"
+              disabled = { !isValid }
+              endIcon  = { <LockOpen /> }
+              variant  = "contained"
+              color    = "primary"
+              fullWidth>
+                Log-In
+            </Button>
+          </Box>
+        </Box>
+      </Box>
 
       <RecoveryDialog
-        isOpen  = { isFPDialogOpen }
-        onClose = { () => setFPDialogOpen( false ) }
-        onRecoveryRequest = { props.onRecoveryRequest }
+        isOpen  = { isRecoveryDialogOpen }
+        onClose = { () => setIsRecoveryDialogOpen( false ) }
+        onRecoveryRequest = { handleRecoveryRequest }
       />
-    </Dialog>
+    </Box>
   )
 }
