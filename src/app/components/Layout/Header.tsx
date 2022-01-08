@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   AppBar,
   Button,
@@ -7,66 +7,153 @@ import {
   Toolbar,
   Box,
   List,
-  ListItem
+  ListItem,
+  Link,
+  Collapse
 } from '@mui/material';
-
-import { LoginDialog } from '../../components';
+import { Lock, AccountBox, Menu as MenuIcon } from '@mui/icons-material';
 
 const links = [
-  { label: 'Home',     href: '/home' },
+  { label: 'Home',     href: '/' },
   { label: 'About',    href: '/about' },
   { label: 'Products', href: '/products' },
   { label: 'Contact',  href: '/contact' }
 ];
 
-interface HeaderProps {}
+export function Header() {
+  const [ isMenuOpen, setIsMenuOpen ] = useState( false );
+  const { pathname } = useLocation();
 
-export function Header( props: HeaderProps ) {
-  const [ isLoginDialogOpen, setIsLoginDialogOpen ] = useState( false );
+  let authLinks = [
+    {
+      label: 'Log-In',
+      href: '/login',
+      icon: <Lock />
+    },
+    {
+      label: 'Sign-Up',
+      href: '/signup',
+      icon: <AccountBox />
+    }
+  ];
 
-  const handleLoginRequest = ( data: any ) => {
-    console.log( data );
-  };
-
-  const handleRecoveryRequest = ( email: string ) => {
-    console.log( email );
-  };
+  /**
+   * When redux logic implemented complete the following:
+   * if isAuth === true, set authLinks = [
+        {
+          label: 'User Name',
+          href: '/profile/username',
+          icon: <someUserIcon />
+        },
+   * ]
+   */
 
   return (
     <AppBar position = "static">
       <Toolbar>
+        {/* App Logo */}
+        <Link
+          component = { NavLink }
+          sx = {{ color: 'white' }}
+          to = "/">
+          <IconButton
+            sx    = {{ mr: 2 }}
+            size  = "large"
+            edge  = "start"
+            color = "inherit">
+            LOGO
+          </IconButton>
+        </Link>
+        {/* Responsivly Collapsable content */}
+        <Collapse
+          in = { isMenuOpen }
+          sx = {{ width: 1, flexGrow: 1, display: { md: 'none' }}}>
+          {/* Mobile Links */}
+          <List>
+            {
+              links.map( link => (
+                <Link
+                  key          = { link.label }
+                  component    = { NavLink }
+                  to           = { link.href }
+                  activeStyle  = {{ color: 'red' }}
+                  exact        = { link.href === '/' }
+                  sx           = {{ color: 'white' }}>
+                  <ListItem sx = {{ justifyContent: 'center' }}>
+                    { link.label }
+                  </ListItem>
+                </Link>
+              ))
+            }
+          </List>
+
+          {/* Mobile Auth Links */}
+          <Box>
+            {
+              authLinks.map( link => (
+                <Link
+                  key       = { link.label }
+                  component = { NavLink }
+                  to        = { link.href }>
+                  <Button
+                    endIcon = { link.icon }
+                    color   = "primary"
+                    sx      = {{ color: pathname === link.href ? 'red' : 'white' }}
+                    fullWidth>
+                      { link.label }
+                  </Button>
+                </Link>
+              ))
+            }
+          </Box>
+        </Collapse>
+        {/* Responsive IconButton Menu */}
         <IconButton
-          sx    = {{ mr: 2 }}
-          size  = "large"
-          edge  = "start"
-          color = "inherit">
-          Test
+          sx      = {{ display: { md: 'none' }}}
+          size    = "large"
+          edge    = "start"
+          onClick = { () => setIsMenuOpen( prev => !prev ) }>
+          <MenuIcon htmlColor = "white" />
         </IconButton>
 
-        <List sx = {{ flexGrow: 1, display: 'inline-flex', color: 'inherit' }}>
+        {/* Desktop Links */}
+        <List sx = {{ flexGrow: 1, display: { xs: 'none', md: 'inline-flex' }}}>
           {
             links.map( link => (
               <Link
-                key  = { link.label }
-                to   = { link.href }>
-                  <ListItem>{ link.label }</ListItem>
+                key         = { link.label }
+                component   = { NavLink }
+                to          = { link.href }
+                activeStyle = {{ color: 'red' }}
+                exact       = { link.href === '/' }
+                sx          = {{ color: 'white' }}>
+                <ListItem>
+                  { link.label }
+                </ListItem>
               </Link>
             ))
           }
         </List>
 
-        <Box>
-          <Button color = "inherit" onClick = { () => setIsLoginDialogOpen( true ) }>Log-In</Button>
-          <Button color = "inherit">Sign-Up</Button>
+        {/* Desktop Auth Links */}
+        <Box sx = {{ display: { xs: 'none', md: 'block' }}}>
+          {
+            authLinks.map( link => (
+              <Link
+                key         = { link.label }
+                component   = { NavLink }
+                to          = { link.href }>
+                <Button
+                  sx      = {{ color: pathname === link.href ? 'red' : 'white' }}
+                  endIcon = { link.icon }
+                  color   = "primary">
+                    { link.label }
+                </Button>
+              </Link>
+            ))
+          }
         </Box>
       </Toolbar>
-
-      <LoginDialog
-        isOpen  = { isLoginDialogOpen }
-        onClose = { () => setIsLoginDialogOpen( false ) }
-        onLogin = { handleLoginRequest }
-        onRecoveryRequest = { handleRecoveryRequest }
-      />
     </AppBar>
   )
 }
