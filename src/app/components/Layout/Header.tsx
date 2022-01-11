@@ -79,7 +79,7 @@ export function Header() {
                   activeStyle  = {{ color: 'red' }}
                   exact        = { link.href === '/' }
                   sx           = {{ color: 'white' }}>
-                  <ListItem sx = {{ justifyContent: 'center' }}>
+                  <ListItem>
                     { link.label }
                   </ListItem>
                 </Link>
@@ -88,7 +88,7 @@ export function Header() {
           </List>
 
           {/* Mobile Auth Links */}
-          <Box>
+          <Box sx = {{ m: 1 }}>
             {
               authLinks.map( link => (
                 <Link
@@ -98,7 +98,7 @@ export function Header() {
                   <Button
                     endIcon = { link.icon }
                     color   = "primary"
-                    sx      = {{ color: pathname === link.href ? 'red' : 'white' }}
+                    sx      = {{ color: pathname === link.href ? 'red' : 'white', justifyContent: 'flex-start' }}
                     fullWidth>
                       { link.label }
                   </Button>
