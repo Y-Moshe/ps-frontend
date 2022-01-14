@@ -98,7 +98,7 @@ export function Header() {
                   <Button
                     endIcon = { link.icon }
                     color   = "primary"
-                    sx      = {{ color: pathname === link.href ? 'red' : 'white', justifyContent: 'flex-start' }}
+                    sx      = {{ color: pathname === link.href ? 'red' : 'white', justifyContent: 'space-between' }}
                     fullWidth>
                       { link.label }
                   </Button>
