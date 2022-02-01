@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 
-import { Footer, Header } from './components';
+import { ErrorBoundary, Footer, Header, SuspenseFallBack } from './components';
 import { AppRouting } from './App-Routing';
 
 import { version } from '../../package.json';
@@ -21,7 +21,11 @@ export default function App() {
     <Box sx = { appStyle }>
       <Header />
 
-      <AppRouting />
+      <ErrorBoundary>
+        <Suspense fallback = { <SuspenseFallBack /> }>
+          <AppRouting />
+        </Suspense>
+      </ErrorBoundary>
 
       <Footer />
     </Box>
