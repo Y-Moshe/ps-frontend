@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 
-import { ErrorBoundary, Footer, Header, SuspenseFallBack } from './components';
+import { ErrorBoundary, Footer, Header, SuspenseFallBack } from './Components';
 import { AppRouting } from './App-Routing';
 
 import { version } from '../../package.json';

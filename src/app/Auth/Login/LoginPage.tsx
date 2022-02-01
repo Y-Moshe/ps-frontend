@@ -25,7 +25,7 @@ import {
   LockOpen
 } from '@mui/icons-material';
 
-import { RecoveryDialog } from '../../components';
+import { RecoveryDialog } from '../../Components';
 
 const validationSchema = yup.object({
   username: yup.string().required().email(),

@@ -14,7 +14,7 @@ import {
   ProductReviewPage,
   CartPage,
   ErrorPage
-} from './pages';
+} from './Pages';
 
 export function AppRouting() {
   const isAuth  = false;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ErrorPage } from '../../../pages';
+import { ErrorPage } from '../../../Pages';
 
 export class ErrorBoundary extends React.Component {
   state = { hasError: false };
