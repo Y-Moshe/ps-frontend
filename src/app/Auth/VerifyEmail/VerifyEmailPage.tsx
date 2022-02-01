@@ -1,12 +1,12 @@
-import { useEffect, useState }  from 'react';
-import { RouteComponentProps }  from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import {
   Box,
   SxProps,
   Theme,
   Alert,
   Grow,
-  LinearProgress
+  CircularProgress
 } from '@mui/material';
 
 const verifyEmailPageStyle: SxProps<Theme> = {
@@ -36,8 +36,10 @@ export default function VerifyEmailPage( props: VerifyEmailPageProps ) {
         setAlertProps({
           severity: 'success',
           message: 'Your email has been verified successfully!'
-        })
+        });
       }, 1500);
+    } else {
+      props.history.push( '/' );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +47,7 @@ export default function VerifyEmailPage( props: VerifyEmailPageProps ) {
 
   return (
     <Box sx = { verifyEmailPageStyle }>
-      { isLoading && <LinearProgress /> }
+      { isLoading && <CircularProgress sx = {{ m: 'auto' }} color = "secondary" size = { 75 } /> }
       {
         alert &&
         <Box sx = {{ m: 'auto' }}>
