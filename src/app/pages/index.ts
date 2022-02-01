@@ -4,4 +4,4 @@ export { ContactPage } from './Contact/ContactPage';
 export { ProductsPage } from './Products/ProductsPage';
 export { ProductReviewPage } from './ProductReview/ProductReviewPage';
 export { CartPage } from './Cart/CartPage';
-export { PageNotFound } from './PageNotFound/PageNotFound';
+export { ErrorPage } from './Error/ErrorPage';
