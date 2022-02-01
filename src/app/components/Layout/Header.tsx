@@ -27,12 +27,12 @@ export function Header() {
   let authLinks = [
     {
       label: 'Log-In',
-      href: '/login',
+      href: '/auth/login',
       icon: <Lock />
     },
     {
       label: 'Sign-Up',
-      href: '/signup',
+      href: '/auth/signup',
       icon: <AccountBox />
     }
   ];
