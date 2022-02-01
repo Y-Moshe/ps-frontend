@@ -1,4 +1,5 @@
 import { ChangeEvent, useState, useRef, useMemo } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -94,7 +95,9 @@ const imgPreviewStyle: SxProps<Theme> = {
   boxShadow: '0 0 10px black'
 };
 
-export function SignupPage() {
+interface SignupPageProps extends RouteComponentProps {}
+
+export default function SignupPage( props: SignupPageProps ) {
   const [ imgPreviewDataURL, setImgPreviewDataURL ] = useState<string>();
   const [ showPassword, setShowPassword ]           = useState( false );
   const profileImageRef = useRef<HTMLInputElement>( null );
@@ -217,7 +220,7 @@ export function SignupPage() {
     const fileReader = new FileReader();
 
     fileReader.onload = () => {
-      setImgPreviewDataURL( fileReader.result as string );
+      setImgPreviewDataURL( fileReader.result as string || '' );
       setValue( 'image', file, { shouldValidate: true });
     };
     

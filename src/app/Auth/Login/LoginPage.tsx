@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from "yup";
+import * as yup from 'yup';
 import {
   Box,
   Button,
@@ -75,7 +76,9 @@ const rememberMeContainerStyle: SxProps<Theme> = {
   marginBottom: 1
 };
 
-export function LoginPage() {
+interface LoginPageProps extends RouteComponentProps {}
+
+export default function LoginPage( props: LoginPageProps ) {
   const [ isRecoveryDialogOpen, setIsRecoveryDialogOpen ] = useState( false );
   const [ showPassword, setShowPassword ] = useState( false );
 
