@@ -65,7 +65,7 @@ export function ContactPage() {
 
       <Box
         component = "pre"
-        sx = {{ textAlign: 'center' }}>
+        sx = {{ textAlign: 'center', whiteSpace: 'pre-wrap', p: 1.5 }}>
         Calista Merritt
         Ap #938-5470 Posuere Ave
         Chickasha LA 58520
